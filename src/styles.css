@@ -1,0 +1,669 @@
+/* Design tokens. DESIGN.md documents these; src/game/palette.ts mirrors the colors for the canvas. */
+:root {
+  --color-bg: #080808;
+  --color-surface: rgba(8, 8, 8, 0.97);
+  --color-hud: rgba(8, 8, 8, 0.8);
+  --color-text: #ffffff;
+  --color-text-muted: #b6c4bf;
+  --color-accent: #00ffcc;
+  --color-accent-hover: #5fffe0;
+  --color-accent-wash: rgba(0, 255, 204, 0.14);
+  --color-accent-glow: rgba(0, 255, 204, 0.32);
+  --color-on-accent: #080808;
+  --color-line: rgba(0, 255, 204, 0.34);
+  --color-track: rgba(255, 255, 255, 0.16);
+  --color-focus: #ffffff;
+
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+  --text-display: 1.75rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  --radius: 4px;
+  --control: 2.75rem;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+
+  --inset-start: max(var(--space-4), env(safe-area-inset-left));
+  --inset-end: max(var(--space-4), env(safe-area-inset-right));
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1,
+h2,
+p,
+dl,
+dd,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Page frame: the nav, then the stage filling the rest of the viewport. No page scroll. */
+.app {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* Top navigation */
+.topnav {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) var(--control);
+  grid-template-areas:
+    "title title mute"
+    "badge link link";
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  padding-block: max(var(--space-1), env(safe-area-inset-top)) var(--space-2);
+  padding-inline: var(--inset-start) var(--inset-end);
+  border-block-end: 1px solid var(--color-line);
+  background: var(--color-bg);
+}
+
+.topnav-title {
+  grid-area: title;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge {
+  grid-area: badge;
+  justify-self: start;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.topnav-link {
+  grid-area: link;
+  justify-self: end;
+}
+
+.topnav-mute {
+  grid-area: mute;
+}
+
+@media (max-width: 22.4rem) {
+  .topnav-link-lead {
+    display: none;
+  }
+}
+
+@media (min-width: 45rem) {
+  .topnav {
+    grid-template-columns: auto auto minmax(0, 1fr) auto var(--control);
+    grid-template-areas: "title badge . link mute";
+    gap: var(--space-4);
+    padding-block: max(var(--space-2), env(safe-area-inset-top)) var(--space-2);
+  }
+}
+
+/* Controls */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 3.25rem;
+  padding-inline: var(--space-6);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-md);
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.button-primary {
+  border-color: transparent;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  box-shadow: 0 0 24px var(--color-accent-glow);
+}
+
+.button-small {
+  min-height: 2.25rem;
+  padding-inline: var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: var(--control);
+  height: var(--control);
+  padding: 0;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .button:hover,
+  .icon-button:hover {
+    background: var(--color-accent-wash);
+  }
+
+  .button-primary:hover {
+    background: var(--color-accent-hover);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .icon-button {
+    transition-property: background-color, transform;
+    transition-duration: 150ms;
+    transition-timing-function: var(--ease);
+  }
+
+  .button:active,
+  .icon-button:active {
+    transform: scale(0.96);
+  }
+}
+
+/* Stage: the canvas fills it; the HUD and screens sit above in a two-row grid. */
+.stage {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.stage-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* HUD */
+.hud {
+  position: relative;
+  grid-row: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding-block: var(--space-2);
+  padding-inline: var(--inset-start) var(--inset-end);
+  background: var(--color-hud);
+  pointer-events: none;
+}
+
+.hud-stats {
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto auto minmax(4.75rem, 1fr) var(--control);
+  gap: var(--space-2) var(--space-4);
+  min-width: 0;
+}
+
+.hud-stat {
+  min-width: 0;
+}
+
+.hud-stat dt {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.hud-stat dd {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.hud-rank {
+  grid-column: 1 / -1;
+}
+
+.hud-stat .hud-rank-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-block-start: var(--space-1);
+  font-size: var(--text-sm);
+  line-height: 1.25;
+}
+
+.rank-badge {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.hud-rank-next {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 400;
+}
+
+.meter {
+  display: block;
+  height: 2px;
+  margin-block-start: var(--space-1);
+  background: var(--color-track);
+}
+
+.meter-fill {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+  transform-origin: left center;
+}
+
+.hud-pause {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-end: var(--inset-end);
+  pointer-events: auto;
+}
+
+@media (max-width: 22.4rem) {
+  .hud-stat dd {
+    font-size: var(--text-md);
+  }
+
+  .hud-stats {
+    column-gap: var(--space-3);
+  }
+}
+
+@media (min-width: 45rem) {
+  .hud {
+    padding-inline-end: calc(var(--inset-end) + var(--control) + var(--space-4));
+  }
+
+  .hud-stats {
+    grid-template-columns: 7.5rem 7.5rem 6rem minmax(0, 24rem);
+    gap: var(--space-6);
+  }
+
+  .hud-rank {
+    grid-column: auto;
+  }
+}
+
+/* Screens */
+.overlay {
+  position: relative;
+  grid-row: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 0;
+  padding-block: var(--space-3) max(var(--space-3), env(safe-area-inset-bottom));
+  padding-inline: var(--inset-start) var(--inset-end);
+  pointer-events: none;
+}
+
+.panel {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 30rem;
+  max-height: 100%;
+  padding: var(--space-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  pointer-events: auto;
+}
+
+.panel-compact {
+  max-width: 26rem;
+}
+
+.display {
+  font-size: var(--text-display);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.display span {
+  display: block;
+}
+
+.display-accent {
+  color: var(--color-accent);
+}
+
+.heading {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  color: var(--color-text);
+  text-wrap: pretty;
+}
+
+.hint {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  text-wrap: pretty;
+}
+
+.panel-action {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.panel-buttons {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* Legend */
+.legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.legend-title {
+  margin-block-end: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+.legend-list {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.legend-item {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.legend-text {
+  display: grid;
+  font-size: var(--text-xs);
+  line-height: 1.25;
+}
+
+.legend-text span {
+  color: var(--color-text-muted);
+}
+
+/* Game over results */
+.result {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.result-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.result-row dt {
+  flex: none;
+  color: var(--color-text-muted);
+}
+
+.result-row dd {
+  font-weight: 700;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.result-row .result-score {
+  color: var(--color-accent);
+  font-size: var(--text-xl);
+  line-height: 1.1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .panel-enter {
+    animation: panel-enter 220ms var(--ease) both;
+  }
+
+  .rank-badge {
+    animation: rank-change 700ms ease-out;
+  }
+}
+
+@keyframes panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes rank-change {
+  from {
+    color: var(--color-text);
+  }
+}
+
+@media (min-width: 45rem) {
+  :root {
+    --text-display: 2.75rem;
+  }
+
+  .overlay {
+    align-items: center;
+    padding-block: var(--space-4);
+  }
+
+  .overlay-start {
+    justify-content: flex-start;
+    padding-inline-start: max(var(--space-8), env(safe-area-inset-left));
+  }
+
+  .panel {
+    gap: var(--space-4);
+    padding: var(--space-6);
+  }
+
+  .panel-buttons {
+    grid-template-columns: auto auto;
+  }
+
+  .panel-buttons .button {
+    padding-inline: var(--space-4);
+  }
+}
+
+/* Small phones: tighter panel, so the whole start screen still fits without scrolling. */
+@media (max-width: 22.4rem), (max-height: 44rem) {
+  .panel {
+    gap: var(--space-2);
+    padding: var(--space-3);
+  }
+
+  .legend-item {
+    grid-template-columns: 1.25rem minmax(0, 1fr);
+    gap: var(--space-1) var(--space-2);
+  }
+
+  .legend-item svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+/* Short landscape phones and heavy zoom: one HUD row, and the start screen splits into two columns. */
+@media (max-height: 30rem) and (min-width: 35rem) {
+  :root {
+    --text-display: 1.75rem;
+  }
+
+  .topnav {
+    grid-template-columns: auto auto minmax(0, 1fr) auto var(--control);
+    grid-template-areas: "title badge . link mute";
+    gap: var(--space-3);
+    padding-block: 0;
+  }
+
+  .hud {
+    padding-inline-end: calc(var(--inset-end) + var(--control) + var(--space-3));
+  }
+
+  .hud-stats {
+    grid-template-columns: auto auto 4.75rem minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+
+  .hud-rank {
+    grid-column: auto;
+  }
+
+  .overlay,
+  .overlay-start {
+    align-items: center;
+    justify-content: center;
+    padding-block: var(--space-2);
+    padding-inline-start: var(--inset-start);
+  }
+
+  .panel {
+    gap: var(--space-2);
+    padding: var(--space-3);
+  }
+
+  .panel-start {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: var(--space-4);
+    max-width: 48rem;
+  }
+
+  .panel-start header,
+  .panel-start .lede,
+  .panel-start .panel-action {
+    grid-column: 1;
+  }
+
+  .panel-start .legend {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: center;
+  }
+
+  .panel-compact {
+    max-width: 34rem;
+  }
+
+  .panel-buttons {
+    grid-template-columns: auto auto;
+  }
+
+  .button {
+    min-height: var(--control);
+  }
+
+  .button-small {
+    min-height: 2.25rem;
+  }
+}
+
+/* The narrowest of those: the row only fits with the small type step and without the link's lead word. */
+@media (max-height: 30rem) and (min-width: 35rem) and (max-width: 45rem) {
+  .topnav-title,
+  .hud-stat .hud-rank-row {
+    font-size: var(--text-xs);
+  }
+
+  .topnav-link-lead,
+  .hud-rank-next {
+    display: none;
+  }
+}

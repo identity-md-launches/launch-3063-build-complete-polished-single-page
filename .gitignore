@@ -1,0 +1,8 @@
+# Dependencies and caches stay out of Git at every nesting level.
+# dist/ is deliberately NOT ignored: the static export is part of the delivery.
+**/node_modules/
+**/.npm/
+**/.cache/
+**/.vite/
+test/scratch/
+*.log
